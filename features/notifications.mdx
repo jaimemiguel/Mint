@@ -1,0 +1,59 @@
+---
+title: "Stay Up to Date with Google Notifications"
+sidebarTitle: "Notifications"
+description: "Configure email, in-app, and push notifications to stay informed about activity in your workspace, mentions, and important system alerts."
+---
+
+Google keeps you informed about the things that matter most through a flexible notification system that works across multiple channels. Whether you prefer to catch updates in your email inbox, see a badge in the app, receive a push alert on your phone, or pipe events directly into your own systems via webhook, you're in control of how and when you hear about activity in your workspace.
+
+## Notification Channels
+
+Google delivers notifications through four channels, and you can enable any combination of them depending on how you like to work:
+
+- **Email** — Notifications are sent to the address associated with your Google account. Ideal for a written record of important activity or for staying informed when you're away from the app.
+- **In-App** — Alerts appear in the notification center inside Google (the bell icon in the top navigation). In-app notifications are always on and provide a running history of your recent activity.
+- **Push (Mobile)** — If you have the Google mobile app installed, push notifications deliver real-time alerts directly to your device's lock screen and notification tray.
+- **Webhook** — Route notification events to an external URL as structured JSON payloads. Useful for feeding Google activity into custom dashboards, scripts, or third-party services.
+
+## Notification Types
+
+| Notification Type | When It's Triggered |
+|---|---|
+| **Mentions** | Someone uses `@yourname` in a document, comment, or conversation |
+| **Comments** | A new comment is added to a resource you own or are watching |
+| **Shares** | Someone shares a document, workspace, or file directly with you |
+| **Updates** | A change is made to an item you're watching — edits, status changes, or renames |
+| **System Alerts** | Account security events (new sign-in, password change) and billing notifications |
+
+## Configuring Notifications
+
+You can customize your notification preferences at any time from Account Settings. Changes take effect immediately.
+
+<Steps>
+  <Step title="Go to Account Settings → Notifications">
+    Click your profile avatar in the top-right corner of Google and select **Account Settings**. Then choose **Notifications** from the left-hand menu.
+  </Step>
+  <Step title="Choose channels for each notification type">
+    For each notification type — Mentions, Comments, Shares, Updates, and System Alerts — use the toggles to enable or disable delivery via Email, Push, and Webhook. In-app notifications are always active.
+  </Step>
+  <Step title="Set quiet hours (optional)">
+    Under **Quiet Hours**, define a daily time window during which email and push notifications are suppressed. Any notifications generated during quiet hours are held and delivered when the window ends.
+  </Step>
+  <Step title="Save your preferences">
+    Click **Save Changes**. Your updated preferences apply to all future notifications immediately.
+  </Step>
+</Steps>
+
+## Notification Frequency
+
+For notification types that can generate high volume — such as Updates and Comments — you can choose how often Google batches and delivers them:
+
+- **Immediate** — Each event triggers a notification the moment it occurs. Best for mentions and shares where timely awareness matters.
+- **Daily Digest** — Google bundles all notifications of a given type and sends a single summary email each morning. Useful for staying informed without inbox overload.
+- **Weekly Summary** — Receive one consolidated email per week covering all activity across your workspace. A good option for lower-priority notification types like general updates.
+
+You can set a different frequency for each notification type, giving you fine-grained control over your communication preferences.
+
+<Note>
+  **Security alerts are always delivered immediately, regardless of your notification preferences or quiet hours settings.** This includes alerts for new sign-ins from unrecognized devices, password changes, and billing failures. These notifications cannot be disabled to ensure your account stays protected.
+</Note>

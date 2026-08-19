@@ -1,0 +1,72 @@
+---
+title: "Get Help and Contact Google Support"
+sidebarTitle: "Support"
+description: "Reach Google's support team by email or live chat, browse the community forum, check service status, and find self-service resources."
+---
+
+Google offers several ways to get help — whether you prefer to find answers yourself, connect with other users, or speak directly with the support team. Use the options below to choose the channel that best fits your situation. For the fastest resolution, review the self-service resources first and have your account details ready before reaching out.
+
+---
+
+## Support Channels
+
+<CardGroup cols={2}>
+  <Card title="Email Support" icon="envelope" href="mailto:support@google.com">
+    Send a message to **support@google.com** and a member of the support team will respond within 24 hours. Enterprise customers receive a response within 4 hours.
+  </Card>
+
+  <Card title="Community Forum" icon="users" href="https://community.google.com">
+    Browse questions and answers from other Google users, or post your own. The community forum is a great place to discover tips, workarounds, and best practices shared by peers and Google staff.
+  </Card>
+
+  <Card title="Status Page" icon="signal" href="https://status.google.com">
+    Check for ongoing incidents, scheduled maintenance, and historical uptime data. If you're experiencing an issue, always check the status page first — an active incident may already be under investigation.
+  </Card>
+
+  <Card title="Documentation" icon="book-open" href="/">
+    You're here! Browse the full documentation for guides, API references, and tutorials. Use the search bar at the top to find answers quickly.
+  </Card>
+</CardGroup>
+
+---
+
+## Before You Contact Support
+
+Checking a few things before you reach out can save time — and may resolve the issue entirely without needing to wait for a response.
+
+- Review the relevant section of this documentation for guidance on your feature or workflow.
+- Check the [FAQ](/help/faq) to see if your question has a ready-made answer.
+- Visit the [Status Page](https://status.google.com) to rule out an active incident or outage affecting your account.
+- Note the exact error message you received, including any error code.
+- Record the **Request ID** from the `X-Request-ID` response header — this is the single most useful piece of information for the support team.
+- Identify which feature or part of the platform you were using when the problem occurred.
+
+---
+
+## What to Include in Your Support Request
+
+Providing complete information upfront helps the support team investigate without needing to ask follow-up questions. Include the following in every request:
+
+- **Account email** — the email address registered to your Google account
+- **Error message and HTTP status code** — copy the full error text, not just a summary
+- **Request ID** — the value of the `X-Request-ID` header from the failed API response
+- **Steps to reproduce** — a numbered list of the exact actions that led to the error
+- **Expected behavior** — what you expected to happen
+- **Actual behavior** — what actually happened instead
+
+<Note>
+  Including the `X-Request-ID` header value in your support request allows the team to locate the exact server-side log entry for your request within seconds. Without it, investigation can take significantly longer. You can find this value in the response headers of any API call or, for errors in the web app, in the browser's network panel under the failed request's response headers.
+</Note>
+
+---
+
+## Response Times
+
+| Plan | First response |
+|---|---|
+| Standard (all plans) | Within 24 hours |
+| Priority support (Enterprise) | Within 4 hours |
+
+Response times are measured from the moment your request is received during business hours (Monday–Friday, 09:00–18:00 UTC). Requests submitted outside business hours are triaged on the next business day, though many are answered sooner.
+
+If you are on an Enterprise plan and have a critical production issue, mark your email subject line with **[URGENT]** to ensure it is prioritized in the queue.

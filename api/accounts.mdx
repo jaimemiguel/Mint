@@ -1,0 +1,252 @@
+---
+title: "Accounts API: Manage User Accounts Programmatically"
+sidebarTitle: "Accounts"
+description: "Create, retrieve, update, and list user accounts via the Google REST API. Includes full request and response examples for each endpoint."
+---
+
+The Accounts API lets you programmatically manage user accounts within your Google organization. Use it to list all accounts you have access to, look up individual users by ID, and create new accounts without going through the dashboard. All endpoints require a valid Bearer token with account management permissions.
+
+## Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/v1/accounts` | List all accounts |
+| `GET` | `/v1/accounts/{id}` | Retrieve a single account |
+| `POST` | `/v1/accounts` | Create a new account |
+
+---
+
+## List Accounts
+
+`GET /v1/accounts`
+
+Retrieve a paginated list of all accounts you have access to. Use query parameters to filter results by status or control the page size.
+
+### Query Parameters
+
+<ParamField query="page" type="integer">
+  The page number to retrieve. Defaults to `1`.
+</ParamField>
+
+<ParamField query="per_page" type="integer">
+  Number of results to return per page. Defaults to `20`. Maximum is `100`.
+</ParamField>
+
+<ParamField query="status" type="string">
+  Filter accounts by status. Accepted values: `active`, `inactive`.
+</ParamField>
+
+### Request
+
+```bash
+curl -X GET "https://api.google.com/v1/accounts?page=1&per_page=20" \
+  -H "Authorization: Bearer ggl_live_xxxxxxxxxxxx"
+```
+
+### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "acc_01H8XYZ",
+      "email": "user@example.com",
+      "name": "Jane Smith",
+      "status": "active",
+      "created_at": "2024-01-15T10:30:00Z",
+      "updated_at": "2024-03-10T08:15:00Z"
+    }
+  ],
+  "meta": {
+    "total": 1,
+    "page": 1,
+    "per_page": 20
+  }
+}
+```
+
+### Response Fields
+
+<ResponseField name="data" type="array">
+  Array of account objects matching your query.
+</ResponseField>
+
+<ResponseField name="data[].id" type="string">
+  Unique identifier for the account, prefixed with `acc_`.
+</ResponseField>
+
+<ResponseField name="data[].email" type="string">
+  Email address associated with the account.
+</ResponseField>
+
+<ResponseField name="data[].name" type="string">
+  Full name of the account holder.
+</ResponseField>
+
+<ResponseField name="data[].status" type="string">
+  Current account status. Either `active` or `inactive`.
+</ResponseField>
+
+<ResponseField name="data[].created_at" type="string">
+  ISO 8601 timestamp indicating when the account was created.
+</ResponseField>
+
+<ResponseField name="data[].updated_at" type="string">
+  ISO 8601 timestamp of the most recent update to the account.
+</ResponseField>
+
+<ResponseField name="meta.total" type="integer">
+  Total number of accounts matching the query across all pages.
+</ResponseField>
+
+<ResponseField name="meta.page" type="integer">
+  The current page number.
+</ResponseField>
+
+<ResponseField name="meta.per_page" type="integer">
+  Number of results returned per page.
+</ResponseField>
+
+---
+
+## Retrieve an Account
+
+`GET /v1/accounts/{id}`
+
+Fetch the details of a single account by its unique ID.
+
+### Path Parameters
+
+<ParamField path="id" type="string" required>
+  The unique identifier of the account to retrieve. Example: `acc_01H8XYZ`.
+</ParamField>
+
+### Request
+
+```bash
+curl -X GET https://api.google.com/v1/accounts/acc_01H8XYZ \
+  -H "Authorization: Bearer ggl_live_xxxxxxxxxxxx"
+```
+
+### Response
+
+```json
+{
+  "data": {
+    "id": "acc_01H8XYZ",
+    "email": "user@example.com",
+    "name": "Jane Smith",
+    "role": "admin",
+    "status": "active",
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-03-10T08:15:00Z"
+  }
+}
+```
+
+### Response Fields
+
+<ResponseField name="data.id" type="string">
+  Unique identifier for the account.
+</ResponseField>
+
+<ResponseField name="data.email" type="string">
+  Email address associated with the account.
+</ResponseField>
+
+<ResponseField name="data.name" type="string">
+  Full name of the account holder.
+</ResponseField>
+
+<ResponseField name="data.role" type="string">
+  The account's role in the organization. Common values: `admin`, `member`, `viewer`.
+</ResponseField>
+
+<ResponseField name="data.status" type="string">
+  Current account status. Either `active` or `inactive`.
+</ResponseField>
+
+<ResponseField name="data.created_at" type="string">
+  ISO 8601 timestamp of when the account was created.
+</ResponseField>
+
+<ResponseField name="data.updated_at" type="string">
+  ISO 8601 timestamp of the most recent update.
+</ResponseField>
+
+---
+
+## Create an Account
+
+`POST /v1/accounts`
+
+Create a new user account in your organization. The new account receives an invitation email at the provided address.
+
+### Body Parameters
+
+<ParamField body="email" type="string" required>
+  The email address for the new account. Must be unique within your organization.
+</ParamField>
+
+<ParamField body="name" type="string" required>
+  Full name of the account holder.
+</ParamField>
+
+<ParamField body="role" type="string">
+  The role to assign to the new account. Accepted values: `admin`, `member`, `viewer`. Defaults to `member`.
+</ParamField>
+
+### Request
+
+```bash
+curl -X POST https://api.google.com/v1/accounts \
+  -H "Authorization: Bearer ggl_live_xxxxxxxxxxxx" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "newuser@example.com",
+    "name": "Alex Johnson",
+    "role": "member"
+  }'
+```
+
+### Response
+
+```json
+{
+  "data": {
+    "id": "acc_01H9DEF",
+    "email": "newuser@example.com",
+    "name": "Alex Johnson",
+    "role": "member",
+    "status": "invited",
+    "created_at": "2024-04-01T09:00:00Z",
+    "updated_at": "2024-04-01T09:00:00Z"
+  }
+}
+```
+
+### Response Fields
+
+<ResponseField name="data.id" type="string">
+  Unique identifier for the newly created account.
+</ResponseField>
+
+<ResponseField name="data.email" type="string">
+  Email address of the new account.
+</ResponseField>
+
+<ResponseField name="data.name" type="string">
+  Full name of the new account holder.
+</ResponseField>
+
+<ResponseField name="data.role" type="string">
+  Role assigned to the account.
+</ResponseField>
+
+<ResponseField name="data.status" type="string">
+  Initial status of the account. Newly created accounts start with a status of `invited` until the user accepts the invitation.
+</ResponseField>
+
+<ResponseField name="data.created_at" type="string">
+  ISO 8601 timestamp of when the account was created.
+</ResponseField>

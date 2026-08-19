@@ -1,0 +1,106 @@
+---
+title: "Frequently Asked Questions About Google"
+sidebarTitle: "FAQ"
+description: "Answers to the most common questions about accounts, billing, API access, permissions, integrations, and using Google's platform day to day."
+---
+
+Whether you're just getting started or managing a growing team, you'll find answers here to the questions that come up most often. Browse by category below — if you don't see what you're looking for, visit the [Support](/help/support) page to reach the team directly.
+
+---
+
+## Account
+
+<AccordionGroup>
+  <Accordion title="How do I create an account?">
+    Navigate to the Google sign-up page and click **Get started**. Enter your name, email address, and a strong password, then verify your email by clicking the link sent to your inbox. Once verified, you'll land in your new workspace and can begin using the platform immediately.
+  </Accordion>
+
+  <Accordion title="How do I invite someone to my workspace?">
+    Open **Settings → Members** from the sidebar, then click **Invite member**. Enter the person's email address, choose their role (Editor or Viewer), and click **Send invite**. They'll receive an email with a link to join. Invites expire after 7 days — resend them from the same Members page if needed.
+  </Accordion>
+
+  <Accordion title="Can I have multiple workspaces?">
+    Yes. Click your workspace name in the top-left corner and select **Create new workspace**. Each workspace has its own members, settings, and billing. You can switch between workspaces at any time from the same dropdown menu.
+  </Accordion>
+
+  <Accordion title="How do I transfer workspace ownership?">
+    Go to **Settings → Members**, find the member you want to make the new Owner, click the three-dot menu next to their name, and select **Transfer ownership**. You'll be asked to confirm the action. Note that transferring ownership moves all billing responsibility to the new owner.
+  </Accordion>
+
+  <Accordion title="How do I delete my account?">
+    Navigate to **Settings → Account**, scroll to the **Danger zone** section, and click **Delete account**. You'll be asked to type your email address to confirm. Deleting your account is permanent — all your data will be removed within 30 days and cannot be recovered.
+  </Accordion>
+
+  <Accordion title="What authentication methods are supported?">
+    Google supports the following authentication methods:
+
+    - **Email and password** — standard credential-based login
+    - **Single Sign-On (SSO)** — SAML 2.0 and OIDC for enterprise plans
+    - **OAuth 2.0** — for third-party integrations and API access
+    - **Two-factor authentication (2FA)** — via authenticator app or SMS
+
+    Enterprise customers can enforce SSO and disable password login from **Settings → Security**.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## API & Integrations
+
+<AccordionGroup>
+  <Accordion title="How do I generate an API key?">
+    Go to **Settings → API Keys** and click **Generate new key**. Give the key a descriptive name (for example, `production-backend`), choose the scopes it needs, and click **Create**. Copy the key immediately — it will only be shown once. Store it securely in an environment variable or secrets manager; never commit it to source control.
+  </Accordion>
+
+  <Accordion title="What happens if I exceed my API rate limit?">
+    When you exceed your plan's rate limit, the API returns a `429 Too Many Requests` response. The response headers include:
+
+    - `X-RateLimit-Limit` — your total request allowance
+    - `X-RateLimit-Remaining` — requests left in the current window
+    - `Retry-After` — seconds to wait before retrying
+
+    Implement exponential backoff in your client and respect the `Retry-After` value. If you consistently hit limits, consider upgrading your plan or batching requests more efficiently.
+  </Accordion>
+
+  <Accordion title="How do I revoke a connected app's access?">
+    Go to **Settings → Integrations**, find the app you want to disconnect, and click **Revoke access**. This immediately invalidates any tokens the app was using. If the app was accessing data on behalf of your workspace members, notify them so they can re-authorize their own connections if needed.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Billing & Data
+
+<AccordionGroup>
+  <Accordion title="How do I export my data?">
+    Navigate to **Settings → Data & Privacy** and click **Request data export**. Google will compile your data and email you a download link within 24 hours. The export includes your account details, workspace content, and activity history in JSON and CSV formats. Download links expire after 48 hours.
+  </Accordion>
+
+  <Accordion title="What's the difference between Editor and Viewer roles?">
+    | Permission | Editor | Viewer |
+    |---|---|---|
+    | View content | ✅ | ✅ |
+    | Create and edit content | ✅ | ❌ |
+    | Invite members | ✅ | ❌ |
+    | Manage integrations | ✅ | ❌ |
+    | Access billing settings | ❌ | ❌ |
+
+    Only workspace **Owners** and **Admins** can access billing and security settings. Assign the most restrictive role that still lets each person do their work.
+  </Accordion>
+</AccordionGroup>
+
+---
+
+## Collaboration
+
+<AccordionGroup>
+  <Accordion title="How do I contact support?">
+    You have several options:
+
+    - **Email:** [support@google.com](mailto:support@google.com) — responses within 24 hours (4 hours for enterprise plans)
+    - **Live chat:** Available from the **?** icon in the bottom-right corner of the app
+    - **Community forum:** Browse and post questions at the Google Community
+
+    When contacting support, include your account email, the error message you saw, the `X-Request-ID` from the response headers, and the steps to reproduce the issue. See the [Support page](/help/support) for full details.
+  </Accordion>
+</AccordionGroup>

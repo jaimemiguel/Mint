@@ -1,0 +1,334 @@
+---
+title: "Resources API: Create and Manage Your Content"
+sidebarTitle: "Resources"
+description: "The Resources API lets you create, retrieve, update, and delete content objects in your workspace. Full endpoint reference with examples."
+---
+
+Resources are the core content objects in Google — documents, files, notes, and any other structured data you store in a workspace. The Resources API gives you full programmatic control over these objects: list and filter them, retrieve individual items, create new ones, update existing content, and delete what you no longer need. All operations are scoped to the workspaces your API key has access to.
+
+## Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `GET` | `/v1/resources` | List resources |
+| `GET` | `/v1/resources/{id}` | Retrieve a single resource |
+| `POST` | `/v1/resources` | Create a new resource |
+| `PUT` | `/v1/resources/{id}` | Update an existing resource |
+| `DELETE` | `/v1/resources/{id}` | Delete a resource |
+
+---
+
+## List Resources
+
+`GET /v1/resources`
+
+Retrieve a paginated list of resources. Filter by workspace, type, or status to narrow results.
+
+### Query Parameters
+
+<ParamField query="workspace_id" type="string">
+  Filter resources by workspace. Returns only resources belonging to the specified workspace.
+</ParamField>
+
+<ParamField query="type" type="string">
+  Filter by resource type. Example values: `document`, `spreadsheet`, `image`.
+</ParamField>
+
+<ParamField query="status" type="string">
+  Filter by resource status. Accepted values: `active`, `archived`, `deleted`.
+</ParamField>
+
+<ParamField query="page" type="integer">
+  Page number to retrieve. Defaults to `1`.
+</ParamField>
+
+<ParamField query="per_page" type="integer">
+  Number of results per page. Defaults to `20`. Maximum is `100`.
+</ParamField>
+
+### Request
+
+```bash
+curl -X GET "https://api.google.com/v1/resources?workspace_id=ws_01H9ABC&type=document&page=1" \
+  -H "Authorization: Bearer ggl_live_xxxxxxxxxxxx"
+```
+
+### Response
+
+```json
+{
+  "data": [
+    {
+      "id": "res_01H8ABC",
+      "name": "Q4 Marketing Plan",
+      "type": "document",
+      "workspace_id": "ws_01H9ABC",
+      "status": "active",
+      "created_at": "2024-01-15T10:30:00Z",
+      "updated_at": "2024-03-10T08:15:00Z"
+    }
+  ],
+  "meta": {
+    "total": 1,
+    "page": 1,
+    "per_page": 20
+  }
+}
+```
+
+---
+
+## Retrieve a Resource
+
+`GET /v1/resources/{id}`
+
+Fetch the full details of a single resource by its unique ID.
+
+### Path Parameters
+
+<ParamField path="id" type="string" required>
+  The unique identifier of the resource to retrieve. Example: `res_01H8ABC`.
+</ParamField>
+
+### Request
+
+```bash
+curl -X GET https://api.google.com/v1/resources/res_01H8ABC \
+  -H "Authorization: Bearer ggl_live_xxxxxxxxxxxx"
+```
+
+### Response
+
+```json
+{
+  "data": {
+    "id": "res_01H8ABC",
+    "name": "Q4 Marketing Plan",
+    "type": "document",
+    "workspace_id": "ws_01H9ABC",
+    "content": "Initial draft...",
+    "metadata": {
+      "author": "Jane Smith",
+      "tags": ["marketing", "q4"]
+    },
+    "status": "active",
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-03-10T08:15:00Z"
+  }
+}
+```
+
+### Response Fields
+
+<ResponseField name="data.id" type="string">
+  Unique identifier for the resource, prefixed with `res_`.
+</ResponseField>
+
+<ResponseField name="data.name" type="string">
+  Display name of the resource.
+</ResponseField>
+
+<ResponseField name="data.type" type="string">
+  The resource type, such as `document`, `spreadsheet`, or `image`.
+</ResponseField>
+
+<ResponseField name="data.workspace_id" type="string">
+  ID of the workspace this resource belongs to.
+</ResponseField>
+
+<ResponseField name="data.content" type="string">
+  The primary content body of the resource, if applicable.
+</ResponseField>
+
+<ResponseField name="data.metadata" type="object">
+  Arbitrary key-value pairs you can use to store custom attributes.
+</ResponseField>
+
+<ResponseField name="data.status" type="string">
+  Current status of the resource: `active`, `archived`, or `deleted`.
+</ResponseField>
+
+<ResponseField name="data.created_at" type="string">
+  ISO 8601 timestamp of when the resource was created.
+</ResponseField>
+
+<ResponseField name="data.updated_at" type="string">
+  ISO 8601 timestamp of the most recent update.
+</ResponseField>
+
+---
+
+## Create a Resource
+
+`POST /v1/resources`
+
+Create a new resource inside a workspace.
+
+### Body Parameters
+
+<ParamField body="name" type="string" required>
+  The display name for the new resource.
+</ParamField>
+
+<ParamField body="type" type="string" required>
+  The type of resource to create. Example values: `document`, `spreadsheet`, `image`.
+</ParamField>
+
+<ParamField body="workspace_id" type="string" required>
+  The ID of the workspace where the resource will be created.
+</ParamField>
+
+<ParamField body="content" type="string">
+  The initial content body of the resource. Optional at creation time.
+</ParamField>
+
+<ParamField body="metadata" type="object">
+  An optional object of custom key-value pairs to associate with the resource.
+</ParamField>
+
+### Request
+
+```bash
+curl -X POST https://api.google.com/v1/resources \
+  -H "Authorization: Bearer ggl_live_xxxxxxxxxxxx" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Q4 Marketing Plan",
+    "type": "document",
+    "workspace_id": "ws_01H9ABC",
+    "content": "Initial draft..."
+  }'
+```
+
+### Response
+
+```json
+{
+  "data": {
+    "id": "res_01H8ABC",
+    "name": "Q4 Marketing Plan",
+    "type": "document",
+    "workspace_id": "ws_01H9ABC",
+    "content": "Initial draft...",
+    "metadata": {},
+    "status": "active",
+    "created_at": "2024-04-01T09:00:00Z",
+    "updated_at": "2024-04-01T09:00:00Z"
+  }
+}
+```
+
+---
+
+## Update a Resource
+
+`PUT /v1/resources/{id}`
+
+Update one or more fields on an existing resource. Only include the fields you want to change — all other fields remain unchanged.
+
+### Path Parameters
+
+<ParamField path="id" type="string" required>
+  The unique identifier of the resource to update.
+</ParamField>
+
+### Body Parameters
+
+<ParamField body="name" type="string">
+  Updated display name for the resource.
+</ParamField>
+
+<ParamField body="content" type="string">
+  Updated content body.
+</ParamField>
+
+<ParamField body="metadata" type="object">
+  Updated metadata object. This replaces the existing metadata entirely — include all keys you want to retain.
+</ParamField>
+
+<ParamField body="status" type="string">
+  Updated resource status. Accepted values: `active`, `archived`.
+</ParamField>
+
+### Request
+
+```bash
+curl -X PUT https://api.google.com/v1/resources/res_01H8ABC \
+  -H "Authorization: Bearer ggl_live_xxxxxxxxxxxx" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Q4 Marketing Plan — Final",
+    "content": "Revised and approved draft."
+  }'
+```
+
+### Response
+
+```json
+{
+  "data": {
+    "id": "res_01H8ABC",
+    "name": "Q4 Marketing Plan — Final",
+    "type": "document",
+    "workspace_id": "ws_01H9ABC",
+    "content": "Revised and approved draft.",
+    "metadata": {},
+    "status": "active",
+    "created_at": "2024-04-01T09:00:00Z",
+    "updated_at": "2024-04-02T14:30:00Z"
+  }
+}
+```
+
+---
+
+## Delete a Resource
+
+`DELETE /v1/resources/{id}`
+
+Delete a resource by ID. By default, this performs a **soft delete** — the resource is marked as `deleted` and excluded from list results, but can be recovered within 30 days by contacting support. To permanently delete a resource immediately, pass the `permanent=true` query parameter.
+
+### Path Parameters
+
+<ParamField path="id" type="string" required>
+  The unique identifier of the resource to delete.
+</ParamField>
+
+### Query Parameters
+
+<ParamField query="permanent" type="boolean">
+  Set to `true` to permanently delete the resource. This action cannot be undone. Defaults to `false`.
+</ParamField>
+
+### Request
+
+```bash
+curl -X DELETE https://api.google.com/v1/resources/res_01H8ABC \
+  -H "Authorization: Bearer ggl_live_xxxxxxxxxxxx"
+```
+
+### Response
+
+```json
+{
+  "data": {
+    "id": "res_01H8ABC",
+    "status": "deleted",
+    "deleted_at": "2024-04-03T11:00:00Z"
+  }
+}
+```
+
+### Response Fields
+
+<ResponseField name="data.id" type="string">
+  The ID of the deleted resource.
+</ResponseField>
+
+<ResponseField name="data.status" type="string">
+  Confirms the resource status is now `deleted`.
+</ResponseField>
+
+<ResponseField name="data.deleted_at" type="string">
+  ISO 8601 timestamp of when the resource was deleted.
+</ResponseField>

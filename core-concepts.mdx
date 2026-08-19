@@ -1,0 +1,35 @@
+---
+title: "Core Concepts: How Google's Platform Works"
+sidebarTitle: "Core Concepts"
+description: "Understand the key building blocks of Google's platform: accounts, resources, workspaces, permissions, and the API — explained for end users."
+---
+
+Before diving deep into any specific product, it helps to understand the fundamental building blocks that underpin everything on Google's platform. These concepts apply across Google's full suite of tools — from the way your identity is managed to how your data is stored, shared, and accessed via the API. Familiarizing yourself with these ideas will make the rest of the documentation much easier to follow.
+
+## Accounts
+
+An account is your identity on the Google platform and the foundation for accessing every product and service. When you sign in with your Google account, the platform knows who you are, what you own, and what you're allowed to do. Accounts can belong to individuals or be managed by an organization through Google Workspace, where an admin controls account provisioning, security settings, and product access.
+
+## Workspaces
+
+A workspace is an organizational unit that groups users and their resources under a shared environment. If you're using Google Workspace for business, your workspace defines the boundary of your organization — it includes your domain (for example, `yourcompany.com`), your team members' accounts, and the shared files and data your organization owns. Admins manage workspaces through the [Google Admin Console](https://admin.google.com), where they can configure policies, add or remove users, and control which Google services are available.
+
+## Resources
+
+Resources are the objects you create, store, and manage across Google's products — files in Google Drive, events in Google Calendar, messages in Gmail, datasets in BigQuery, and so on. Every resource has a unique identifier, a type, an owner, and a set of metadata. When you interact with the Google API, you're typically performing operations on resources: creating them, reading their data, updating their properties, or deleting them.
+
+## Permissions
+
+Permissions determine who can access a resource and what they can do with it. Google uses a role-based model where you can grant other users or groups specific levels of access — such as Viewer, Editor, or Owner — on individual resources or across an entire workspace. Permissions can be set at the file level (for example, sharing a single Google Doc with a colleague), at the folder level, or at the organization level through your admin console. Always apply the principle of least privilege: grant only the access that a user or application actually needs.
+
+## API Keys
+
+An API key is a credential that identifies your application when making programmatic requests to Google's services. You generate API keys from the [Google Developer Console](https://console.developers.google.com), and each key is scoped to a specific project. For most production use cases, you'll use OAuth 2.0 tokens instead of bare API keys, as they support delegated access and are tied to a specific user's permissions. Treat your API keys like passwords — rotate them regularly, restrict their scope to only the APIs they need, and never expose them in client-side code or public repositories.
+
+## Webhooks
+
+Webhooks let Google notify your application in real time when specific events occur — for example, when a new email arrives in Gmail, when a file is updated in Drive, or when a form response is submitted. Instead of polling the API repeatedly to check for changes, you register a webhook endpoint (a URL on your server) and Google sends an HTTP `POST` request to that URL whenever the relevant event fires. This approach is more efficient and responsive than polling, and it's the recommended pattern for building event-driven integrations on top of Google's platform.
+
+<Info>
+  Each concept covered here has its own in-depth guide with configuration details, API examples, and best practices. Navigate to the relevant section in the sidebar, or start with the [API Reference](/api/introduction) for a full list of available operations.
+</Info>

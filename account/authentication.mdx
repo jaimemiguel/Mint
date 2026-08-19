@@ -1,0 +1,101 @@
+---
+title: "Authenticate with Google: API Keys & OAuth"
+sidebarTitle: "Authentication"
+description: "Generate and manage API keys, use OAuth 2.0 for user-delegated access, and secure your integration with Google's authentication system."
+---
+
+Google supports two primary authentication methods — API keys and OAuth 2.0 — so you can choose the right level of access for your integration. API keys are ideal for server-to-server calls where you control both ends of the connection, while OAuth 2.0 lets you act on behalf of a user with their explicit consent. Understanding when and how to use each method is the foundation of a secure, reliable integration.
+
+## API Keys
+
+API keys are the simplest way to authenticate requests to Google's APIs. Each key is tied to your account and grants access to the services you've enabled in the console.
+
+### Generate an API Key
+
+1. Sign in to the [Google Console](https://console.google.com).
+2. Navigate to **Account → API Keys**.
+3. Click **Create New Key**.
+4. Give the key a descriptive name (for example, `production-backend` or `staging-server`).
+5. Optionally restrict the key to specific services or IP ranges.
+6. Click **Create** and copy your key immediately — it will not be shown again in full.
+
+### Use Your API Key in Requests
+
+Pass your API key in the `Authorization` header of every request using the `Bearer` scheme:
+
+```bash
+curl -X GET https://api.google.com/v1/accounts \
+  -H "Authorization: Bearer ggl_live_xxxxxxxxxxxx"
+```
+
+Replace `ggl_live_xxxxxxxxxxxx` with your actual API key. All requests must be made over HTTPS — plain HTTP requests will be rejected.
+
+### Security Best Practices
+
+Protecting your API key is just as important as generating it. Follow these practices to reduce your exposure:
+
+- **Rotate keys regularly.** Schedule key rotation every 90 days or immediately after any suspected exposure.
+- **Restrict scope.** Limit each key to only the services and endpoints it needs. A key used for read-only reporting should never have write access.
+- **Never expose keys in client-side code.** API keys embedded in browser JavaScript, mobile app binaries, or public repositories can be extracted and abused. Always call the API from your server.
+- **Delete unused keys.** Remove any key that is no longer active to shrink your attack surface.
+
+<Warning>
+  Never share your API keys in public repositories, bug reports, screenshots, or support tickets. If you suspect a key has been compromised, revoke it immediately from the [API Keys console](https://console.google.com) and generate a replacement.
+</Warning>
+
+<Tip>
+  Store your API keys in environment variables rather than hard-coding them in your source files. For example, set `GOOGLE_API_KEY=ggl_live_xxxxxxxxxxxx` in your environment and reference it as `process.env.GOOGLE_API_KEY` (Node.js) or `os.environ["GOOGLE_API_KEY"]` (Python). This keeps secrets out of your codebase and makes rotating keys effortless.
+</Tip>
+
+---
+
+## OAuth 2.0
+
+OAuth 2.0 is the right choice when your application needs to act on behalf of a specific user. Rather than sharing credentials directly, the user grants your app a scoped access token that can be revoked at any time.
+
+**Use OAuth 2.0 when:**
+- Your app needs access to a user's private data (files, calendar, contacts).
+- You want users to sign in with their Google account.
+- You need granular, revocable permissions rather than full account access.
+
+**Use API keys when:**
+- You're making server-to-server calls with your own account's data.
+- No end-user identity is involved.
+- You need a simple, low-overhead integration.
+
+### Authorization Flow Overview
+
+Google uses the standard OAuth 2.0 Authorization Code flow:
+
+1. **Redirect the user** to Google's authorization endpoint with your `client_id`, requested `scope`, and a `redirect_uri`.
+2. **The user consents** to the requested permissions on Google's login page.
+3. **Google redirects back** to your `redirect_uri` with a short-lived authorization `code`.
+4. **Exchange the code** for an access token and refresh token by making a server-side POST request.
+5. **Use the access token** in the `Authorization` header of subsequent API calls.
+6. **Refresh the access token** using the refresh token before it expires (typically after one hour).
+
+### Example: Exchange Authorization Code for Access Token
+
+```bash
+curl -X POST https://auth.google.com/oauth2/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=authorization_code" \
+  -d "code=AUTH_CODE_HERE" \
+  -d "redirect_uri=https://yourapp.com/callback" \
+  -d "client_id=your_client_id" \
+  -d "client_secret=your_client_secret"
+```
+
+A successful response returns a JSON object containing `access_token`, `refresh_token`, `expires_in`, and `token_type`. Store the refresh token securely — it lets you obtain new access tokens without requiring the user to re-authenticate.
+
+---
+
+## Authentication Errors
+
+If your requests are rejected, check the HTTP status code and message against the table below to diagnose the issue quickly.
+
+| Status Code | Error | Meaning |
+|---|---|---|
+| `401 Unauthorized` | Missing or invalid token | Your request did not include a valid `Authorization` header, or the provided API key / access token has been revoked or expired. Verify your credentials and try again. |
+| `403 Forbidden` | Insufficient permissions | Your token is valid, but it does not have the scope or role required to perform this action. Check that your API key has the correct service permissions or that your OAuth token includes the required scopes. |
+| `429 Too Many Requests` | Rate limit exceeded | You have sent more requests than your plan allows within the current time window. Implement exponential backoff and retry logic, or consider upgrading your plan for higher rate limits. |

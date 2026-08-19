@@ -1,0 +1,169 @@
+---
+title: "Troubleshooting Common Issues in Google"
+sidebarTitle: "Troubleshooting"
+description: "Diagnose and fix the most common problems with API authentication, permissions, integrations, and account access in Google's platform."
+---
+
+Use this guide to quickly identify and resolve the most frequent issues you may encounter on the Google platform. Each section covers a specific problem area with the most likely causes and the exact steps to fix them. Work through the relevant section top to bottom — most issues are resolved by the first or second check.
+
+<Tip>
+  Before diving into specific issues, check the [Google Status Page](https://status.google.com) first. If there's an active incident, the problem may already be known and a fix may already be underway — no troubleshooting needed on your end.
+</Tip>
+
+---
+
+## Authentication Problems
+
+### 401 Unauthorized
+
+A `401` response means the server could not verify your identity. The most common causes are:
+
+- **Missing API key** — make sure your request includes an `Authorization` header.
+- **Invalid API key** — the key may have been deleted or rotated. Go to **Settings → API Keys** to confirm the key is still active.
+- **Incorrect format** — the key must be sent as a Bearer token. See the example below.
+
+```bash
+# Correct
+Authorization: Bearer ggl_live_xxxxxxxxxxxx
+
+# Incorrect — missing "Bearer" prefix
+Authorization: ggl_live_xxxxxxxxxxxx
+
+# Incorrect — missing the key itself
+Authorization: Bearer
+```
+
+<Warning>
+  Never log or expose your API key in client-side code, error messages, or version control. If you suspect a key has been compromised, revoke it immediately in **Settings → API Keys** and issue a new one.
+</Warning>
+
+### 403 Forbidden
+
+A `403` response means your credentials are valid but your account does not have permission to perform the requested action. Check the following:
+
+1. Confirm your API key has the required **scopes** for the endpoint you're calling. You can view and edit scopes in **Settings → API Keys**.
+2. Confirm your workspace role (Owner, Admin, Editor, or Viewer) grants access to the resource. Viewers cannot create or modify data.
+3. If you're acting on behalf of a workspace you were invited to, contact the workspace Admin to review your permissions.
+
+### Token Expired
+
+OAuth tokens and session tokens have a limited lifetime. If your token has expired, you'll receive a `401` response with an `invalid_token` error code in the response body.
+
+To resolve this:
+
+- **OAuth integrations:** Use your refresh token to obtain a new access token without requiring the user to re-authorize. See the [Authentication guide](/api/authentication) for the token refresh endpoint details.
+- **API keys:** API keys do not expire automatically. If yours is no longer working, check whether it was manually revoked in **Settings → API Keys** and generate a new one if needed.
+
+<Warning>
+  Store refresh tokens as securely as access tokens. A stolen refresh token can be used to generate new access tokens indefinitely until it is revoked.
+</Warning>
+
+---
+
+## API Issues
+
+### 429 Rate Limit Exceeded
+
+You've sent more requests than your plan allows in a given time window. The response includes headers to help you back off gracefully:
+
+| Header | Description |
+|---|---|
+| `X-RateLimit-Limit` | Total requests allowed per window |
+| `X-RateLimit-Remaining` | Requests remaining in the current window |
+| `Retry-After` | Seconds to wait before sending the next request |
+
+Implement exponential backoff in your client — wait the number of seconds specified in `Retry-After`, then double the wait time on each subsequent `429` until the request succeeds. If you're consistently hitting limits, batch your requests or upgrade to a higher plan.
+
+### 404 Not Found
+
+A `404` response means the resource you requested does not exist at that path. Check:
+
+- **Resource ID** — confirm the ID in your request matches an actual resource in your account. IDs are case-sensitive.
+- **Endpoint path** — verify the URL against the [API Reference](/api/introduction). A typo in the path (for example, `/workspaces` vs `/workspace`) will return a 404.
+- **Workspace scope** — make sure you're querying the correct workspace. Resources are not shared across workspaces.
+
+### 500 Server Error
+
+A `500` response indicates an unexpected error on Google's servers. This is not caused by your request.
+
+1. Check the [Google Status Page](https://status.google.com) for any active incidents.
+2. Retry the request using exponential backoff — start with a 1-second delay, then 2s, 4s, 8s, and so on, up to a maximum of 5 retries.
+3. If the error persists after 5 minutes and no incident is reported, contact [support@google.com](mailto:support@google.com) with the `X-Request-ID` from the response headers.
+
+### Connection Timeouts
+
+If your requests are timing out before receiving a response:
+
+- **Increase your client timeout** — set your HTTP client's timeout to at least 30 seconds. Some operations (such as large data exports) may take longer.
+- **Check your network** — firewalls or proxies may be dropping long-lived connections. Test from a different network to isolate the issue.
+- **Reduce payload size** — if you're sending large request bodies, try splitting them into smaller batches.
+
+---
+
+## Integration Issues
+
+### Integration Not Syncing
+
+If a connected integration has stopped syncing data:
+
+1. Go to **Settings → Integrations** and check the status indicator next to the integration. A red dot indicates an authorization error.
+2. Click **Re-authorize** and complete the OAuth flow again. This generates a fresh access token.
+3. Trigger a manual sync from the integration's settings panel and check whether data flows through.
+
+<Warning>
+  Re-authorizing an integration may briefly interrupt any active syncs. Schedule re-authorization during a low-traffic period if you rely on real-time data.
+</Warning>
+
+### Missing Events
+
+If your webhook endpoint is not receiving events:
+
+1. Confirm your webhook URL is publicly reachable — Google's servers must be able to send an outbound HTTP POST to it.
+2. Ensure your endpoint returns a `200 OK` response within 5 seconds. Timeouts or non-2xx responses cause Google to retry and eventually disable the webhook.
+3. Check **Settings → Webhooks** for the delivery log. Failed deliveries are listed with the HTTP status your endpoint returned.
+4. Review any firewall rules that may be blocking inbound requests from Google's IP ranges (listed on the [Status Page](https://status.google.com)).
+
+### Duplicate Events
+
+Webhook events may occasionally be delivered more than once — for example, after a network timeout causes a retry. To handle this safely:
+
+- Use the `event_id` field present in every webhook payload as an **idempotency key**.
+- Before processing an event, check whether you've already handled an event with that `event_id`.
+- Store processed `event_id` values in your database for at least 24 hours.
+
+---
+
+## Account Access
+
+### Can't Log In
+
+If you can't sign in to your account:
+
+1. Double-check that you're using the email address associated with your Google account.
+2. Click **Forgot password** on the login page and follow the reset link sent to your email. The link expires after 1 hour.
+3. Check your spam folder if the reset email doesn't arrive within a few minutes.
+4. If you still can't access your account, contact [support@google.com](mailto:support@google.com) with your account email and we'll verify your identity manually.
+
+<Warning>
+  Never share your password or reset link with anyone, including Google support staff. Google will never ask for your password.
+</Warning>
+
+### Two-Factor Authentication (2FA) Issues
+
+If you're locked out because of 2FA:
+
+1. **Use a backup code** — when you set up 2FA, Google provided a set of one-time backup codes. Enter one of those on the 2FA prompt to regain access.
+2. **Lost your backup codes?** Click **Try another method** on the 2FA screen and select email verification if your account email is still accessible.
+3. **Still locked out?** Contact [support@google.com](mailto:support@google.com) with proof of account ownership (such as billing information or your original registration email) to begin the manual recovery process.
+
+<Warning>
+  Store your 2FA backup codes in a secure location such as a password manager. Without them, account recovery requires manual identity verification and may take up to 48 hours.
+</Warning>
+
+### Missing Workspace Access
+
+If a workspace you previously had access to no longer appears in your account:
+
+- You may have been removed by a workspace Admin. Contact the person who invited you to confirm your membership status.
+- If the workspace was on a paid plan that lapsed, access may have been suspended. Ask the workspace Owner to check their billing status.
+- If you believe you were removed in error, ask a workspace Admin to re-invite you from **Settings → Members**.

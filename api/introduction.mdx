@@ -1,0 +1,99 @@
+---
+title: "Google API: Build Integrations with Our REST API"
+sidebarTitle: "Introduction"
+description: "The Google REST API lets you programmatically manage accounts, resources, and webhooks. Authenticate with API keys and interact using standard HTTP methods."
+---
+
+The Google REST API gives you programmatic access to the full suite of Google's cloud-based products and services. Whether you're automating account management, building custom integrations, or syncing data with your own systems, the API lets you interact with Google using standard HTTP methods and JSON — no special SDKs required.
+
+## Base URL
+
+All API requests are made to the following base URL:
+
+```
+https://api.google.com/v1
+```
+
+Include this prefix on every request. All endpoints are versioned under `/v1` to ensure stability as the API evolves.
+
+## Request Format
+
+Send all requests with a `Content-Type: application/json` header and a JSON body where applicable. The API supports the standard HTTP verbs:
+
+| Method | Usage |
+|--------|-------|
+| `GET` | Retrieve one or more resources |
+| `POST` | Create a new resource |
+| `PUT` | Update an existing resource |
+| `DELETE` | Delete a resource |
+
+## Response Format
+
+Every successful response returns a JSON object. Collection endpoints wrap results in a `data` array alongside a `meta` object for pagination. Single-resource endpoints return the object directly under `data`. All objects include the following standard fields:
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | string | Unique identifier for the object |
+| `created_at` | string (ISO 8601) | Timestamp when the object was created |
+| `updated_at` | string (ISO 8601) | Timestamp of the most recent update |
+| `status` | string | Current status of the object |
+
+Here is an example request and its corresponding response:
+
+```bash
+curl -X GET https://api.google.com/v1/accounts \
+  -H "Authorization: Bearer ggl_live_xxxxxxxxxxxx" \
+  -H "Content-Type: application/json"
+```
+
+```json
+{
+  "data": [
+    {
+      "id": "acc_01H8XYZ",
+      "email": "user@example.com",
+      "name": "Jane Smith",
+      "created_at": "2024-01-15T10:30:00Z",
+      "status": "active"
+    }
+  ],
+  "meta": {
+    "total": 1,
+    "page": 1,
+    "per_page": 20
+  }
+}
+```
+
+## Versioning
+
+The current API version is **v1**, indicated by the `/v1` path prefix on all endpoints. Google will communicate any breaking changes — such as removed fields or changed behavior — through email and the developer changelog at least 30 days in advance. Non-breaking additions (new fields, new endpoints) may be introduced at any time without a version bump.
+
+When a new major version is released, the previous version will remain available for a deprecation window so you have time to migrate.
+
+## Error Format
+
+When a request fails, the API returns a JSON object with an `error` key. Every error includes a machine-readable `code`, a human-readable `message`, and a `details` object with any additional context.
+
+```json
+{
+  "error": {
+    "code": "unauthorized",
+    "message": "Invalid or missing API key",
+    "details": {}
+  }
+}
+```
+
+Use the `error.code` field to handle errors programmatically. Common codes include `unauthorized`, `not_found`, `validation_error`, and `rate_limit_exceeded`.
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Authentication" icon="lock" href="/api/authentication">
+    Learn how to authenticate your requests using API keys and OAuth 2.0 tokens.
+  </Card>
+  <Card title="Rate Limits" icon="gauge" href="/api/rate-limits">
+    Understand request quotas, rate limit headers, and how to implement retry logic.
+  </Card>
+</CardGroup>

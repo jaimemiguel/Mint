@@ -1,0 +1,110 @@
+---
+title: "Permissions and Roles: Control Who Can Do What"
+sidebarTitle: "Permissions"
+description: "Set up roles, assign permissions, and manage access control across your Google workspace to protect sensitive data and maintain team structure."
+---
+
+Google uses a role-based permissions model to give you precise control over what each person in your workspace can see and do. Roles apply at the workspace level and set a baseline of access for every member, while resource-level permissions let you grant or restrict access to individual items — such as a specific document or project — without changing a person's overall role. Understanding how these two layers interact helps you protect sensitive information while keeping collaboration frictionless.
+
+---
+
+## Role Types
+
+Google includes five built-in roles. Each role is cumulative: higher roles include all the capabilities of the roles below them.
+
+| Role | Description |
+|------|-------------|
+| **Owner** | Full control over the workspace. Can manage billing, transfer ownership, and permanently delete the workspace. |
+| **Admin** | Can manage members, configure workspace settings, and enable or disable integrations. Cannot transfer ownership or delete the workspace. |
+| **Editor** | Can create, edit, and delete their own resources, and edit any shared resource they have been granted access to. |
+| **Viewer** | Read-only access to shared resources. Cannot create, edit, or delete any content. |
+| **Guest** | Limited access to specific items that have been explicitly shared with them. Cannot browse workspace content or access settings. |
+
+### Owner
+The Owner role carries the highest level of trust in your workspace. The Owner can perform all administrative actions, manage the billing subscription, and permanently delete the workspace. Each workspace has exactly one Owner at a time.
+
+### Admin
+Admins handle day-to-day workspace management: inviting and removing members, adjusting roles, configuring security policies, and connecting integrations. Assign the Admin role to team members who need to manage the workspace without having full billing or deletion authority.
+
+### Editor
+Editors are the primary contributors in your workspace. They can create new resources, modify their own content, and collaborate on any resource shared with them at the Editor access level. This is the recommended default role for most active team members.
+
+### Viewer
+Viewers can read and reference any content shared with them but cannot make changes. Use the Viewer role for stakeholders, auditors, or team members who need visibility without edit access.
+
+### Guest
+Guests operate outside your workspace's standard membership. They can only access items that have been directly shared with them and have no visibility into the rest of the workspace. Use this role for external collaborators or contractors who need access to a specific deliverable.
+
+---
+
+## Assigning Roles
+
+You can change a member's role at any time from the Members settings page. Only Admins and Owners can assign or change roles.
+
+<Steps>
+  <Step title="Go to Settings → Members">
+    Open **Settings** from the main navigation, then select **Members** from the left sidebar.
+  </Step>
+  <Step title="Find the member">
+    Use the search bar to locate the member whose role you want to change, or scroll through the members list.
+  </Step>
+  <Step title="Click the role dropdown">
+    Click the role badge displayed next to the member's name. A dropdown menu will appear showing all available roles.
+  </Step>
+  <Step title="Select the new role">
+    Choose the role you want to assign. A brief description of each role appears in the dropdown to help you decide.
+  </Step>
+  <Step title="Confirm the change">
+    Click **Confirm** in the dialog that appears. The member's permissions update immediately — no need to notify them separately, as they will see the change reflected on their next page load.
+  </Step>
+</Steps>
+
+---
+
+## Resource-Level Permissions
+
+In addition to workspace roles, you can share individual resources — documents, folders, projects, or dashboards — with custom access levels that apply only to that item.
+
+To share a resource:
+1. Open the resource and click the **Share** button in the top-right corner.
+2. Enter the email address of the person or team you want to share with.
+3. Choose an access level: **Can view**, **Can comment**, or **Can edit**.
+4. Click **Send Invite** or **Copy Link** to share.
+
+Resource-level permissions are useful when you need to give a Viewer temporary edit access to a single document, or share a sensitive report with a Guest without exposing the rest of your workspace.
+
+---
+
+## Permission Inheritance
+
+Workspace roles and resource-level permissions work together according to the following rules:
+
+- **Workspace roles set the floor.** A member's workspace role determines the minimum level of access they have across the workspace. A Viewer can never edit a resource through a resource-level invitation.
+- **Resource-level permissions can be more restrictive.** You can limit an Editor's access to a specific resource by sharing it with **Can view** only. Within that resource, the Editor will be treated as a Viewer.
+- **Resource-level permissions cannot exceed workspace roles.** Granting a Guest **Can edit** access to a resource does not elevate them to Editor status across the workspace — it only applies to that specific item.
+- **Inherited access follows folder structure.** Resources inside a shared folder inherit the folder's permissions unless you explicitly override them at the individual resource level.
+
+---
+
+## Permissions Summary
+
+The table below summarizes what each role can do across common workspace actions.
+
+| Action | Owner | Admin | Editor | Viewer | Guest |
+|--------|:-----:|:-----:|:------:|:------:|:-----:|
+| View shared resources | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Create resources | ✅ | ✅ | ✅ | ❌ | ❌ |
+| Edit own resources | ✅ | ✅ | ✅ | ❌ | ❌ |
+| Edit shared resources | ✅ | ✅ | ✅ | ❌ | ❌ |
+| Delete own resources | ✅ | ✅ | ✅ | ❌ | ❌ |
+| Manage members | ✅ | ✅ | ❌ | ❌ | ❌ |
+| Change workspace settings | ✅ | ✅ | ❌ | ❌ | ❌ |
+| Manage billing | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Transfer ownership | ✅ | ❌ | ❌ | ❌ | ❌ |
+| Delete workspace | ✅ | ❌ | ❌ | ❌ | ❌ |
+
+---
+
+<Warning>
+  **Transferring the Owner role is permanent and immediate.** Once you transfer ownership to another member, your account is downgraded to Admin and you lose access to billing and workspace deletion controls. To transfer ownership, go to **Settings → Members**, locate the target member, click their role dropdown, and select **Transfer Ownership**. You will be asked to confirm with your account password. Make sure the receiving member has agreed to take on this responsibility before proceeding.
+</Warning>

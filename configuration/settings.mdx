@@ -1,0 +1,95 @@
+---
+title: "Workspace Settings: Configure Your Google Environment"
+sidebarTitle: "Settings"
+description: "Adjust workspace name, locale, data retention, API access, and other workspace-level settings to tailor Google to your organization's needs."
+---
+
+Your Google workspace settings give you centralized control over how your environment looks, behaves, and integrates with the rest of your tools. Whether you're tuning personal preferences like your display language or managing organization-wide policies like data retention and API access, every option lives in one place — **Settings** — so you can find and adjust what you need without hunting through menus.
+
+<Note>
+  Only **Admins** and **Owners** can change workspace-level settings. Personal settings are available to all members.
+</Note>
+
+---
+
+## General Settings
+
+General settings control the foundational identity and behavior of your workspace. To reach them, navigate to **Settings → General**.
+
+**Workspace Name**
+Your workspace name appears across the product, in email notifications, and in shared links. To rename your workspace:
+1. Go to **Settings → General**.
+2. Click the **Workspace Name** field and enter the new name.
+3. Click **Save Changes**.
+
+**Display Language**
+Google supports multiple interface languages. Select your preferred language from the **Display Language** dropdown. Changes take effect immediately and apply only to your account unless you're configuring a workspace-wide default.
+
+**Timezone**
+Set your workspace timezone to ensure that timestamps, scheduled events, and activity logs reflect the correct local time. Choose a timezone from the **Timezone** selector under **Settings → General → Locale**.
+
+**Date Format**
+Choose between regional date formats (for example, MM/DD/YYYY or DD/MM/YYYY) to match your organization's standard. This setting affects how dates appear throughout the workspace.
+
+---
+
+## Data & Privacy
+
+Google gives you full visibility and control over your data. Access these options under **Settings → Data & Privacy**.
+
+**Data Retention Policies**
+Define how long Google retains user-generated content, activity logs, and deleted items before they are permanently purged. You can set retention windows on a per-category basis — for example, keeping messages for 12 months while purging deleted files after 30 days.
+
+**Export Options**
+Export a complete copy of your workspace data at any time. Go to **Settings → Data & Privacy → Export Data**, choose the data categories you want to include, and click **Request Export**. You'll receive a download link by email when the export is ready.
+
+**Deletion Requests**
+Submit a formal deletion request to permanently remove specific data records or your entire workspace. Deletion requests are irreversible — review the confirmation screen carefully before proceeding.
+
+---
+
+## API Access
+
+Integrate Google with your own applications and workflows using the API. Manage all API credentials under **Settings → API Access**.
+
+**Enable or Disable the API**
+Toggle API access on or off for your entire workspace using the **API Access** switch. Disabling the API immediately revokes all active tokens.
+
+**View and Rotate API Keys**
+Your workspace API keys are listed under **Settings → API Access → Keys**. To rotate a key:
+1. Click **Rotate** next to the key you want to replace.
+2. Copy the new key and update any integrations that use it.
+3. The old key is invalidated immediately after rotation.
+
+**Manage OAuth Apps**
+Review all OAuth applications that have been granted access to your workspace. Revoke access to any app by clicking **Revoke** next to its entry in the **Connected Apps** list.
+
+---
+
+## Billing & Plan
+
+Your current plan, usage metrics, and upgrade options are all accessible under **Settings → Billing**. From this section you can review your active subscription, monitor seat and storage consumption against your plan limits, and initiate an upgrade or downgrade. Detailed pricing information is available on the Google pricing page.
+
+---
+
+## Personal vs. Workspace Settings
+
+Use the tabs below to understand which settings belong to your individual account and which apply across the entire workspace.
+
+<Tabs>
+  <Tab title="Personal Settings">
+    Personal settings affect only your own account and experience. You can update these at any time without Admin privileges.
+
+    - **Profile** — Update your display name, avatar, job title, and contact information.
+    - **Notifications** — Choose which events trigger email, in-app, or push notifications, and set quiet hours to avoid interruptions.
+    - **Connected Apps** — View and manage third-party applications you have personally authorized to access your Google account.
+  </Tab>
+  <Tab title="Workspace Settings">
+    Workspace settings affect every member of your organization. Only Admins and Owners can modify these.
+
+    - **Members** — Invite new members, adjust roles, and remove users from the workspace.
+    - **Billing** — Manage your subscription plan, payment methods, and invoices.
+    - **Integrations** — Connect workspace-wide tools and services such as SSO providers, storage backends, and third-party platforms.
+    - **Security** — Configure password policies, two-factor authentication requirements, session timeouts, and audit logging.
+  </Tab>
+</Tabs>

@@ -1,0 +1,62 @@
+---
+title: "Connect Google to Third-Party Apps and Services"
+sidebarTitle: "Integrations"
+description: "Link Google with Slack, Zapier, GitHub, and hundreds of other services to automate workflows and keep your tools in sync."
+---
+
+Google doesn't work in isolation — it's designed to fit into the toolkit you already rely on. By connecting Google to your other apps and services, you can eliminate manual data entry, surface the right information at the right time, and build automated workflows that run in the background while you focus on what matters. From messaging apps to project trackers to no-code automation platforms, Google's integration library has you covered.
+
+## Available Integrations
+
+<CardGroup cols={3}>
+  <Card title="Slack" icon="slack">
+    Send Google notifications directly to Slack channels. Keep your team informed about updates, mentions, and activity without leaving the conversation.
+  </Card>
+  <Card title="GitHub" icon="github">
+    Link commits, pull requests, and issues to Google projects. Trace work from idea to deployment in a single view.
+  </Card>
+  <Card title="Zapier" icon="bolt">
+    Automate Google with 5,000+ apps using Zapier's no-code workflow builder. Trigger actions, sync data, and connect tools without writing a line of code.
+  </Card>
+  <Card title="Salesforce" icon="cloud">
+    Sync customer and deal data between Salesforce and Google. Keep sales context alongside your team's work so nothing falls through the cracks.
+  </Card>
+  <Card title="Jira" icon="ticket">
+    Link Jira issues to Google projects and track work items across both platforms. Reduce duplication and keep engineering and operations aligned.
+  </Card>
+  <Card title="Webhook" icon="webhook">
+    Build custom integrations using webhooks. Send real-time event payloads from Google to any endpoint your system can receive.
+  </Card>
+</CardGroup>
+
+## Connecting an Integration
+
+Most integrations can be set up in minutes directly from your Google settings. You'll need an account with the third-party service and permission to authorize connections on its behalf.
+
+<Steps>
+  <Step title="Go to Settings → Integrations">
+    Open **Account Settings** or **Workspace Settings** and select the **Integrations** tab from the left-hand navigation.
+  </Step>
+  <Step title="Find the service you want to connect">
+    Browse the integration directory or use the search bar to locate the app you want to link. Each listing shows a brief description and the types of actions it supports.
+  </Step>
+  <Step title="Click Connect">
+    Select the integration card and click **Connect**. Google will prepare the authorization request for the third-party service.
+  </Step>
+  <Step title="Authorize the connection in the third-party app">
+    You'll be redirected to the external service's authorization page. Log in if prompted, review the requested permissions, and click **Allow** or **Authorize** to complete the handshake.
+  </Step>
+  <Step title="Configure which events trigger actions">
+    Once connected, choose the specific events in Google that should trigger actions in the external service — such as sending a Slack message when a document is shared, or creating a Jira issue when a task is added. Save your configuration to activate the integration.
+  </Step>
+</Steps>
+
+## Custom Webhooks
+
+If you need to connect Google to an internal tool or a service not listed in the integration directory, custom webhooks give you the flexibility to build exactly what you need. When a specified event occurs in Google, a POST request containing a structured JSON payload is sent to the URL you provide.
+
+To set up a webhook, go to **Settings → Integrations → Webhooks** and enter your endpoint URL along with the events you want to subscribe to. For full details on payload structure, authentication, and retry behavior, see the [Webhooks API documentation](/api/webhooks).
+
+<Tip>
+  If you want to automate Google workflows without writing any code, Zapier is the fastest way to get started. With thousands of pre-built "Zaps" available, you can connect Google to your other tools in minutes — no engineering required. Visit [zapier.com](https://zapier.com) to explore what's possible.
+</Tip>

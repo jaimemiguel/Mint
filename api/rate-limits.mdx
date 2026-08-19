@@ -1,0 +1,63 @@
+---
+title: "API Rate Limits and Request Quotas"
+sidebarTitle: "Rate Limits"
+description: "Google enforces per-minute and per-day rate limits on API requests. Learn the limits, read response headers, and implement retry logic correctly."
+---
+
+Google enforces rate limits on all API requests to ensure fair usage and maintain performance across the platform. Limits are applied per API key and measured in two windows: a rolling per-minute window and a rolling per-day window. If you exceed either limit, the API returns a `429 Too Many Requests` response until your quota resets.
+
+## Limits by Plan
+
+Your rate limits depend on your current subscription plan. Higher plans support greater request throughput for production workloads.
+
+| Plan | Requests / minute | Requests / day |
+|------|-------------------|----------------|
+| Free | 60 | 10,000 |
+| Pro | 600 | 100,000 |
+| Enterprise | 6,000 | Unlimited |
+
+<Note>
+  If your use case requires limits beyond what your current plan provides, contact [support@google.com](mailto:support@google.com) to request a quota increase.
+</Note>
+
+## Rate Limit Headers
+
+Every API response includes the following headers so you can monitor your current usage and anticipate resets proactively:
+
+| Header | Description |
+|--------|-------------|
+| `X-RateLimit-Limit` | Total number of requests allowed in the current window |
+| `X-RateLimit-Remaining` | Number of requests remaining in the current window |
+| `X-RateLimit-Reset` | UTC timestamp (ISO 8601) indicating when the current window resets |
+
+Check `X-RateLimit-Remaining` in your response handling to slow down requests before hitting the limit, rather than waiting for a `429` error.
+
+## Handling 429 Errors
+
+When you receive a `429` response, read the `X-RateLimit-Reset` header to determine exactly how long to wait before retrying. If the header is unavailable, fall back to exponential backoff. The following example implements a retry loop with both strategies:
+
+```javascript
+async function fetchWithRetry(url, options, maxRetries = 3) {
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    const response = await fetch(url, options);
+
+    if (response.status === 429) {
+      const resetTime = response.headers.get('X-RateLimit-Reset');
+      const waitMs = resetTime
+        ? (new Date(resetTime) - Date.now())
+        : Math.pow(2, attempt) * 1000;
+      await new Promise(resolve => setTimeout(resolve, waitMs));
+      continue;
+    }
+
+    return response;
+  }
+  throw new Error('Max retries exceeded');
+}
+```
+
+This approach waits precisely until the rate limit window resets when possible, and falls back to 1s, 2s, and 4s delays (exponential backoff) when the reset timestamp is unavailable.
+
+<Tip>
+  Cache API responses wherever your use case allows. For data that doesn't change frequently — such as account details or static resource metadata — a short-lived local cache can dramatically reduce your request count and keep you well within your quota.
+</Tip>
