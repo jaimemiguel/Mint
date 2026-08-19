@@ -1,7 +1,7 @@
 ---
 title: "Webhooks API: Receive Real-Time Event Notifications"
 sidebarTitle: "Webhooks"
-description: "Register webhook endpoints to receive real-time event notifications from Google. Covers registration, event types, payload format, and signature verification."
+description: "Register webhook endpoints to receive real-time Google event notifications. Covers event types, payload format, signature verification, and best practices."
 ---
 
 Webhooks let your application receive real-time notifications when events happen in Google — without polling the API. When a subscribed event occurs, Google sends an HTTP `POST` request to the URL you register, containing a JSON payload with the event details. This is the most efficient way to keep your systems in sync with changes to accounts, resources, and team membership.
@@ -52,6 +52,15 @@ Every webhook delivery uses the same envelope format. The `type` field tells you
 | `type` | string | The event type, e.g. `resource.created` |
 | `created_at` | string | ISO 8601 timestamp of when the event was triggered |
 | `data` | object | The full resource object associated with the event |
+
+## Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/v1/webhooks` | Register a new webhook |
+| `GET` | `/v1/webhooks/{id}` | Retrieve a webhook by ID |
+
+---
 
 ## Register a Webhook
 
@@ -105,6 +114,75 @@ curl -X POST https://api.google.com/v1/webhooks \
   }
 }
 ```
+
+---
+
+## Retrieve a Webhook
+
+`GET /v1/webhooks/{id}`
+
+Fetch the details of a registered webhook by its unique ID. Use this endpoint to inspect a webhook's URL, subscribed events, and current status.
+
+### Path Parameters
+
+<ParamField path="id" type="string" required>
+  The unique identifier of the webhook to retrieve. Example: `wh_01H9GHI`.
+</ParamField>
+
+### Request
+
+```bash
+curl -X GET https://api.google.com/v1/webhooks/wh_01H9GHI \
+  -H "Authorization: Bearer ggl_live_xxxxxxxxxxxx"
+```
+
+### Response
+
+```json
+{
+  "data": {
+    "id": "wh_01H9GHI",
+    "url": "https://yourapp.com/webhooks/google",
+    "events": ["resource.created", "resource.updated", "account.created"],
+    "description": "Production event listener",
+    "status": "active",
+    "created_at": "2024-04-01T09:00:00Z",
+    "updated_at": "2024-04-01T09:00:00Z"
+  }
+}
+```
+
+### Response Fields
+
+<ResponseField name="data.id" type="string">
+  Unique identifier for the webhook, prefixed with `wh_`.
+</ResponseField>
+
+<ResponseField name="data.url" type="string">
+  The HTTPS URL where Google delivers event payloads.
+</ResponseField>
+
+<ResponseField name="data.events" type="array">
+  The list of event type strings this webhook is subscribed to.
+</ResponseField>
+
+<ResponseField name="data.description" type="string">
+  The human-readable label assigned to this webhook.
+</ResponseField>
+
+<ResponseField name="data.status" type="string">
+  Current status of the webhook. Either `active` or `disabled`.
+</ResponseField>
+
+<ResponseField name="data.created_at" type="string">
+  ISO 8601 timestamp of when the webhook was registered.
+</ResponseField>
+
+<ResponseField name="data.updated_at" type="string">
+  ISO 8601 timestamp of the most recent update to the webhook.
+</ResponseField>
+
+---
 
 ## Verify Webhook Signatures
 
